@@ -2,10 +2,10 @@
 -- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Waktu pembuatan: 04 Apr 2022 pada 04.41
--- Versi server: 10.7.3-MariaDB
--- Versi PHP: 8.1.3
+-- Host: mariadb-server
+-- Generation Time: Jun 10, 2022 at 02:31 PM
+-- Server version: 10.7.3-MariaDB-1:10.7.3+maria~focal
+-- PHP Version: 7.4.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `aturan`
+-- Table structure for table `aturan`
 --
 
 CREATE TABLE `aturan` (
@@ -34,7 +34,7 @@ CREATE TABLE `aturan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `aturan`
+-- Dumping data for table `aturan`
 --
 
 INSERT INTO `aturan` (`id`, `gejala`, `id_penyakit`) VALUES
@@ -54,7 +54,7 @@ INSERT INTO `aturan` (`id`, `gejala`, `id_penyakit`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `detail_gejala_konsultasi`
+-- Table structure for table `detail_gejala_konsultasi`
 --
 
 CREATE TABLE `detail_gejala_konsultasi` (
@@ -65,7 +65,7 @@ CREATE TABLE `detail_gejala_konsultasi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `detail_gejala_konsultasi`
+-- Dumping data for table `detail_gejala_konsultasi`
 --
 
 INSERT INTO `detail_gejala_konsultasi` (`id`, `id_konsultasi`, `id_gejala`, `jawaban`) VALUES
@@ -86,12 +86,22 @@ INSERT INTO `detail_gejala_konsultasi` (`id`, `id_konsultasi`, `id_gejala`, `jaw
 (15, 3, 3, 0),
 (16, 3, 9, 0),
 (17, 3, 15, 0),
-(18, 3, 18, 0);
+(18, 3, 18, 0),
+(19, 4, 1, 0),
+(20, 4, 2, 0),
+(21, 4, 8, 0),
+(22, 4, 12, 0),
+(23, 4, 13, 0),
+(24, 4, 18, 0),
+(25, 4, 26, 0),
+(26, 4, 33, 0),
+(27, 4, 39, 0),
+(28, 4, 46, 0);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `detail_penyakit_konsultasi`
+-- Table structure for table `detail_penyakit_konsultasi`
 --
 
 CREATE TABLE `detail_penyakit_konsultasi` (
@@ -101,7 +111,7 @@ CREATE TABLE `detail_penyakit_konsultasi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `detail_penyakit_konsultasi`
+-- Dumping data for table `detail_penyakit_konsultasi`
 --
 
 INSERT INTO `detail_penyakit_konsultasi` (`id`, `id_konsultasi`, `id_penyakit`) VALUES
@@ -111,12 +121,16 @@ INSERT INTO `detail_penyakit_konsultasi` (`id`, `id_konsultasi`, `id_penyakit`) 
 (4, 2, 4),
 (5, 2, 6),
 (6, 3, 2),
-(7, 3, 3);
+(7, 3, 3),
+(8, 4, 2),
+(9, 4, 3),
+(10, 4, 4),
+(11, 4, 6);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `gejala`
+-- Table structure for table `gejala`
 --
 
 CREATE TABLE `gejala` (
@@ -127,7 +141,7 @@ CREATE TABLE `gejala` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `gejala`
+-- Dumping data for table `gejala`
 --
 
 INSERT INTO `gejala` (`id`, `kode_gejala`, `nama_gejala`, `penjelasan_gejala`) VALUES
@@ -190,7 +204,7 @@ INSERT INTO `gejala` (`id`, `kode_gejala`, `nama_gejala`, `penjelasan_gejala`) V
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `konsultasi`
+-- Table structure for table `konsultasi`
 --
 
 CREATE TABLE `konsultasi` (
@@ -202,18 +216,19 @@ CREATE TABLE `konsultasi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `konsultasi`
+-- Dumping data for table `konsultasi`
 --
 
 INSERT INTO `konsultasi` (`id`, `nama_pemilik_hewan`, `nama_hewan`, `usia_hewan`, `tanggal_konsultasi`) VALUES
 (1, 'barok', 'hachi', 2, '2022-04-01'),
 (2, 'barok', 'hachi', 5, '2022-04-01'),
-(3, 'barok', 'hendri', 2, '2022-04-04');
+(3, 'barok', 'hendri', 2, '2022-04-04'),
+(4, 'roy', 'hachi', 21, '2022-04-19');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `penyakit`
+-- Table structure for table `penyakit`
 --
 
 CREATE TABLE `penyakit` (
@@ -224,7 +239,7 @@ CREATE TABLE `penyakit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `penyakit`
+-- Dumping data for table `penyakit`
 --
 
 INSERT INTO `penyakit` (`id`, `kode_penyakit`, `nama_penyakit`, `pengobatan_penyakit`) VALUES
@@ -244,7 +259,7 @@ INSERT INTO `penyakit` (`id`, `kode_penyakit`, `nama_penyakit`, `pengobatan_peny
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `role`
+-- Table structure for table `role`
 --
 
 CREATE TABLE `role` (
@@ -253,7 +268,7 @@ CREATE TABLE `role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `role`
+-- Dumping data for table `role`
 --
 
 INSERT INTO `role` (`id`, `nama_role`) VALUES
@@ -263,7 +278,7 @@ INSERT INTO `role` (`id`, `nama_role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -274,7 +289,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `id_role`, `username`, `password`) VALUES
@@ -286,14 +301,14 @@ INSERT INTO `users` (`id`, `id_role`, `username`, `password`) VALUES
 --
 
 --
--- Indeks untuk tabel `aturan`
+-- Indexes for table `aturan`
 --
 ALTER TABLE `aturan`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_penyakit` (`id_penyakit`);
 
 --
--- Indeks untuk tabel `detail_gejala_konsultasi`
+-- Indexes for table `detail_gejala_konsultasi`
 --
 ALTER TABLE `detail_gejala_konsultasi`
   ADD PRIMARY KEY (`id`),
@@ -301,7 +316,7 @@ ALTER TABLE `detail_gejala_konsultasi`
   ADD KEY `id_gejala` (`id_gejala`);
 
 --
--- Indeks untuk tabel `detail_penyakit_konsultasi`
+-- Indexes for table `detail_penyakit_konsultasi`
 --
 ALTER TABLE `detail_penyakit_konsultasi`
   ADD PRIMARY KEY (`id`),
@@ -309,114 +324,114 @@ ALTER TABLE `detail_penyakit_konsultasi`
   ADD KEY `id_penyakit` (`id_penyakit`);
 
 --
--- Indeks untuk tabel `gejala`
+-- Indexes for table `gejala`
 --
 ALTER TABLE `gejala`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `konsultasi`
+-- Indexes for table `konsultasi`
 --
 ALTER TABLE `konsultasi`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `penyakit`
+-- Indexes for table `penyakit`
 --
 ALTER TABLE `penyakit`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `role`
+-- Indexes for table `role`
 --
 ALTER TABLE `role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_role` (`id_role`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `aturan`
+-- AUTO_INCREMENT for table `aturan`
 --
 ALTER TABLE `aturan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT untuk tabel `detail_gejala_konsultasi`
+-- AUTO_INCREMENT for table `detail_gejala_konsultasi`
 --
 ALTER TABLE `detail_gejala_konsultasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
--- AUTO_INCREMENT untuk tabel `detail_penyakit_konsultasi`
+-- AUTO_INCREMENT for table `detail_penyakit_konsultasi`
 --
 ALTER TABLE `detail_penyakit_konsultasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT untuk tabel `gejala`
+-- AUTO_INCREMENT for table `gejala`
 --
 ALTER TABLE `gejala`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT untuk tabel `konsultasi`
+-- AUTO_INCREMENT for table `konsultasi`
 --
 ALTER TABLE `konsultasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `penyakit`
+-- AUTO_INCREMENT for table `penyakit`
 --
 ALTER TABLE `penyakit`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT untuk tabel `role`
+-- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `aturan`
+-- Constraints for table `aturan`
 --
 ALTER TABLE `aturan`
   ADD CONSTRAINT `aturan_ibfk_1` FOREIGN KEY (`id_penyakit`) REFERENCES `penyakit` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `detail_gejala_konsultasi`
+-- Constraints for table `detail_gejala_konsultasi`
 --
 ALTER TABLE `detail_gejala_konsultasi`
   ADD CONSTRAINT `detail_gejala_konsultasi_ibfk_1` FOREIGN KEY (`id_konsultasi`) REFERENCES `konsultasi` (`id`),
   ADD CONSTRAINT `detail_gejala_konsultasi_ibfk_2` FOREIGN KEY (`id_gejala`) REFERENCES `gejala` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `detail_penyakit_konsultasi`
+-- Constraints for table `detail_penyakit_konsultasi`
 --
 ALTER TABLE `detail_penyakit_konsultasi`
   ADD CONSTRAINT `detail_penyakit_konsultasi_ibfk_1` FOREIGN KEY (`id_konsultasi`) REFERENCES `konsultasi` (`id`),
   ADD CONSTRAINT `detail_penyakit_konsultasi_ibfk_2` FOREIGN KEY (`id_penyakit`) REFERENCES `penyakit` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `users`
+-- Constraints for table `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role` (`id`);
