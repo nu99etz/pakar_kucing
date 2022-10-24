@@ -15,7 +15,7 @@ class AuthModel extends CI_Model
                 'username' => $post['username'],
                 'password' => md5($post['password'])
             ];
-            $sql = $this->db->select('id_role, username, password')->from('users')->where($whereClause)->get();
+            $sql = $this->db->select('*')->from('users')->where($whereClause)->get();
             $query = $sql->row_array();
 
             if (empty($query)) {

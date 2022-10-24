@@ -40,7 +40,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <th>No</th>
                                     <th>Kode Gejala</th>
                                     <th>Nama Gejala</th>
-                                    <th>Penjelasan Gejala</th>
+                                    <th>Is Utama ?</th>
+                                    <th>Is Priority ?</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -59,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php
 
 $data['modal_id'] = 'modal_gejala';
-$data['modal_size'] = 'lg';
+$data['modal_size'] = 'md';
 $data['modal_title'] = 'Form Gejala';
 $this->load->view('include/modal', $data);
 

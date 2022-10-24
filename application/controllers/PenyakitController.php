@@ -25,9 +25,9 @@ class PenyakitController extends MainController
             $row[] = $no;
             $row[] = $value['kode_penyakit'];
             $row[] = $value['nama_penyakit'];
-            $row[] = $value['pengobatan_penyakit'];
-            $button ='<button type="button" name="update" action="' . base_url().'penyakit/edit/'.$value['id'] . '" class="btn-edit btn btn-flat btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
-            $button .= '<button type="button" name="delete" action="' . base_url().'penyakit/destroy/'.$value['id'] . '" class="btn-delete btn btn-flat btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
+            $row[] = $value['solusi_penyakit'];
+            $button ='<button type="button" name="update" action="' . base_url().'penyakit/edit/'.$value['id_ms_penyakit'] . '" class="btn-edit btn btn-flat btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
+            $button .= '<button type="button" name="delete" action="' . base_url().'penyakit/destroy/'.$value['id_ms_penyakit'] . '" class="btn-delete btn btn-flat btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
             $row[] = $button;
             $no++;
             $record[] = $row;
@@ -50,6 +50,14 @@ class PenyakitController extends MainController
             'action' => base_url().'penyakit/store',
         ];
         $this->load->view($layout, $data);
+    }
+
+    public function createImport()
+    {
+        $data = [
+            'action' => base_url() . 'penyakit/importExcel',
+        ];
+        return $this->load->view('penyakit/form_import', $data);
     }
 
     public function store()
@@ -111,6 +119,27 @@ class PenyakitController extends MainController
                 'messages' => $destroy['messages']
             ];
         }
+        echo json_encode($response);
+    }
+
+    public function importExcel()
+    {
+        $data = $this->import_excel($_FILES['upload'], 'xlsx');
+
+        if ($data['status'] == 500) {
+            $response = [
+                'status' => 422,
+                'messages' => $data['messages']
+            ];
+        } else if ($data['status'] == 200) {
+
+            $import_excel = $this->penyakit->importExcel($data['data']);
+            $response = [
+                'status' => $import_excel['status'] == false ? 422 : 200,
+                'messages' => $import_excel['messages']
+            ];
+        }
+
         echo json_encode($response);
     }
 }

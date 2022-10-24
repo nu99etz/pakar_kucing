@@ -17,16 +17,16 @@ if (!empty($aturan)) {
             <option></option>
             <?php foreach ($penyakit as $key => $value) {
                 if (!empty($aturan)) {
-                    if ($aturan['id_penyakit'] == $value['id']) {
+                    if ($aturan['id_ms_penyakit'] == $value['id_ms_penyakit']) {
             ?>
-                        <option value="<?php echo $value['id']; ?>" selected><?php echo $value['kode_penyakit']; ?> - <?php echo $value['nama_penyakit']; ?></option>
+                        <option value="<?php echo $value['id_ms_penyakit']; ?>" selected><?php echo $value['kode_penyakit']; ?> - <?php echo $value['nama_penyakit']; ?></option>
                     <?php    } else {
                     ?>
-                        <option value="<?php echo $value['id']; ?>"><?php echo $value['kode_penyakit']; ?> - <?php echo $value['nama_penyakit']; ?></option>
+                        <option value="<?php echo $value['id_ms_penyakit']; ?>"><?php echo $value['kode_penyakit']; ?> - <?php echo $value['nama_penyakit']; ?></option>
                     <?php }
                 } else {
                     ?>
-                    <option value="<?php echo $value['id']; ?>"><?php echo $value['kode_penyakit']; ?> - <?php echo $value['nama_penyakit']; ?></option>
+                    <option value="<?php echo $value['id_ms_penyakit']; ?>"><?php echo $value['kode_penyakit']; ?> - <?php echo $value['nama_penyakit']; ?></option>
                 <?php        }
                 ?>
             <?php   } ?>
@@ -39,16 +39,16 @@ if (!empty($aturan)) {
             <option></option>
             <?php foreach ($gejala as $key => $value) {
                 if (!empty($list_gejala)) {
-                    if (in_array($value['id'], $list_gejala)) {
+                    if (in_array($value['id_ms_gejala'], $list_gejala)) {
             ?>
-                        <option value="<?php echo $value['id']; ?>" selected><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
+                        <option value="<?php echo $value['id_ms_gejala']; ?>" selected><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
                     <?php   } else {
                     ?>
-                        <option value="<?php echo $value['id']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
+                        <option value="<?php echo $value['id_ms_gejala']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
                     <?php    }
                 } else {
                     ?>
-                    <option value="<?php echo $value['id']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
+                    <option value="<?php echo $value['id_ms_gejala']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
                 <?php    }
                 ?>
             <?php   } ?>

@@ -32,14 +32,14 @@ class AturanController extends MainController
                 for ($i = 1; $i < count($explode); $i++) {
                     $html .= ' <b>DAN</b> ' . $this->gejala->getGejala($explode[$i], 'kode_gejala') . " - " . strtoupper($this->gejala->getGejala($explode[$i], 'nama_gejala')) . '<br/>';
                 }
-                $html .= ' <b>MAKA</b> ' . $this->penyakit->getPenyakit($value['id_penyakit'], 'kode_penyakit') . " - " . strtoupper($this->penyakit->getPenyakit($value['id_penyakit'], 'nama_penyakit')) . '<br/>';
+                $html .= ' <b>MAKA</b> ' . $this->penyakit->getPenyakit($value['id_ms_penyakit'], 'kode_penyakit') . " - " . strtoupper($this->penyakit->getPenyakit($value['id_ms_penyakit'], 'nama_penyakit')) . '<br/>';
                 $row[] = $html;
             } else {
                 $row[] = 'Kosong';
             }
 
-            $button = '<button type="button" name="update" action="' . base_url() . 'aturan/edit/' . $value['id'] . '" class="btn-edit btn btn-flat btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
-            $button .= '<button type="button" name="delete" action="' . base_url() . 'aturan/destroy/' . $value['id'] . '" class="btn-delete btn btn-flat btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
+            $button = '<button type="button" name="update" action="' . base_url() . 'aturan/edit/' . $value['id_rule'] . '" class="btn-edit btn btn-flat btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
+            $button .= '<button type="button" name="delete" action="' . base_url() . 'aturan/destroy/' . $value['id_rule'] . '" class="btn-delete btn btn-flat btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
             $row[] = $button;
 
             $no++;
@@ -90,7 +90,7 @@ class AturanController extends MainController
     {
         $layout = 'aturan/form';
         $aturan = $this->aturan->getAturan($id);
-        $id_penyakit = $this->aturan->getAturan($id, 'id_penyakit');
+        $id_penyakit = $this->aturan->getAturan($id, 'id_ms_penyakit');
         $gejala = $this->gejala->getAllGejala();
         $penyakit = $this->aturan->getPenyakitIfExist($id_penyakit);
         $data = [

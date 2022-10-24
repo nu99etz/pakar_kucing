@@ -4,10 +4,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 if (empty($penyakit)) {
     $nama_penyakit = '';
-    $pengobatan_penyakit = '';
+    $solusi_penyakit = '';
 } else {
     $nama_penyakit = $penyakit['nama_penyakit'];
-    $pengobatan_penyakit = $penyakit['pengobatan_penyakit'];
+    $solusi_penyakit = $penyakit['solusi_penyakit'];
 }
 
 ?>
@@ -20,8 +20,8 @@ if (empty($penyakit)) {
     </div>
 
     <div class="form-group">
-        <label for="pengobatan_penyakit">Pengobatan Penyakit</label>
-        <textarea class="form-control" name="pengobatan_penyakit" id="pengobatan_penyakit" placeholder="Pengobatan Penyakit"><?php echo $pengobatan_penyakit; ?></textarea>
+        <label for="solusi_penyakit">Solusi Penyakit</label>
+        <textarea class="form-control" name="solusi_penyakit" id="solusi_penyakit" placeholder="Solusi Penyakit"><?php echo $solusi_penyakit; ?></textarea>
     </div>
 
     <div class="form-group">
@@ -32,5 +32,5 @@ if (empty($penyakit)) {
 </form>
 
 <script>
-    CKEDITOR.replace('pengobatan_penyakit');
+    CKEDITOR.replace('solusi_penyakit');
 </script>

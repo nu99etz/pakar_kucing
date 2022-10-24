@@ -14,7 +14,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <img src="<?php echo base_url(); ?>assets/default.png" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p><?php echo $this->session->userdata('username'); ?></p>
+                <p><?php echo $this->session->userdata('name'); ?></p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>

@@ -9,14 +9,14 @@ class GejalaModel extends CI_Model
 
     public function getAllGejala()
     {
-        $sql = $this->db->select('*')->from('gejala')->get();
+        $sql = $this->db->select('*')->from('ms_gejala')->get();
         $query = $sql->result_array();
         return $query;
     }
 
     public function getGejala($id, $attr = null)
     {
-        $sql = $this->db->select('*')->from('gejala')->where(['id' => $id])->get();
+        $sql = $this->db->select('*')->from('ms_gejala')->where(['id_ms_gejala' => $id])->get();
         $query = $sql->row_array();
         if ($attr == null) {
             return $query;
@@ -33,10 +33,10 @@ class GejalaModel extends CI_Model
         if ($this->form_validation->run()) {
 
             // check data gejala jika tidak ada maka id dimulai dari 1 dan kode G1
-            $sql = $this->db->select('id')->from('gejala')->order_by('id', 'desc')->limit(1)->get();
+            $sql = $this->db->select('id_ms_gejala')->from('ms_gejala')->order_by('id_ms_gejala', 'desc')->limit(1)->get();
             $query = $sql->row_array();
 
-            if (empty($query['id'])) {
+            if (empty($query['id_ms_gejala'])) {
                 $id = 1;
                 $kodeGejala = 'G01';
             } else {
@@ -48,24 +48,18 @@ class GejalaModel extends CI_Model
                 }
             }
 
-            if($post['penjelasan_gejala'] == '') {
-                $penjelasanGejala = '';
-            } else {
-                $penjelasanGejala = $post['penjelasan_gejala'];
-            }
-
             $data = [
-                'id' => $id,
+                'id_ms_gejala' => $id,
                 'kode_gejala' => $kodeGejala,
                 'nama_gejala' => ucwords($post['nama_gejala']),
-                'penjelasan_gejala' => $penjelasanGejala
+                'is_utama' => $post['is_utama'],
+                'is_priority' => $post['is_priority']
             ];
 
             $this->db->trans_begin();
 
             try {
-
-                $this->db->insert('gejala', $data);
+                $this->db->insert('ms_gejala', $data);
             } catch (Exception $e) {
 
                 $this->db->trans_rollback();
@@ -96,22 +90,17 @@ class GejalaModel extends CI_Model
 
         if ($this->form_validation->run()) {
 
-            if($post['penjelasan_gejala'] == '') {
-                $penjelasanGejala = '';
-            } else {
-                $penjelasanGejala = $post['penjelasan_gejala'];
-            }
-
             $data = [
                 'nama_gejala' => ucwords($post['nama_gejala']),
-                'penjelasan_gejala' => $penjelasanGejala,
+                'is_utama' => $post['is_utama'],
+                'is_priority' => $post['is_priority']
             ];
 
             $this->db->trans_begin();
 
             try {
 
-                $this->db->where(['id' => $id])->update('gejala', $data);
+                $this->db->where(['id_ms_gejala' => $id])->update('ms_gejala', $data);
             } catch (Exception $e) {
 
                 $this->db->trans_rollback();
@@ -136,7 +125,7 @@ class GejalaModel extends CI_Model
 
     public function destroy($id)
     {
-        $this->db->where(['id' => $id])->delete('gejala');
+        $this->db->where(['id_ms_gejala' => $id])->delete('ms_gejala');
         return [
             'status' => true,
             'messages' => 'Data Sukses Dihapus'
@@ -145,7 +134,7 @@ class GejalaModel extends CI_Model
 
     private function checkIfExists($value)
     {
-        $sql = $this->db->select('kode_gejala')->from('gejala')->where(['nama_gejala' => $value])->get();
+        $sql = $this->db->select('kode_gejala')->from('ms_gejala')->where(['kode_gejala' => $value])->get();
         $query = $sql->row_array();
 
         if (empty($query)) {
@@ -159,45 +148,46 @@ class GejalaModel extends CI_Model
     {
         $row = [];
         $record = [];
-        foreach ($data as $value) {
 
-            $checkIfExists = $this->checkIfExists(ucwords($value[0]));
+        $this->db->trans_start();
 
-            if ($checkIfExists == false) {
-                $sql = $this->db->select('id')->from('gejala')->order_by('id', 'desc')->limit(1)->get();
-                $query = $sql->row_array();
+        try {
+            foreach ($data as $value) {
 
-                if (empty($query['id'])) {
-                    $id = 1;
-                    $kodeGejala = 'G01';
-                } else {
-                    $id = $query['id'] + 1;
-                    if ($id < 100) {
-                        $kodeGejala = 'G0' . $id;
+                $checkIfExists = $this->checkIfExists(ucwords($value[0]));
+
+                if ($checkIfExists == false) {
+                    $sql = $this->db->select('id_ms_gejala')->from('ms_gejala')->order_by('id_ms_gejala', 'desc')->limit(1)->get();
+                    $query = $sql->row_array();
+
+                    if (empty($query['id_ms_gejala'])) {
+                        $id = 1;
+                        $kodeGejala = $value[0] == "" ? 'G01' : $value[0];
                     } else {
-                        $kodeGejala = 'G' . $id;
+                        $id = $query['id_ms_gejala'] + 1;
+                        if ($id < 100) {
+                            $kodeGejala = $value[0] == "" ? 'G0' . $id : $value[0];
+                        } else {
+                            $kodeGejala = $value[0] == "" ? 'G' . $id : $value[0];
+                        }
                     }
+
+                    $row['id_ms_gejala'] = $id;
+                    $row['kode_gejala'] = $kodeGejala;
+                    $row['nama_gejala'] = ucwords($value[1]);
+
+                    $this->db->insert('ms_gejala', $row);
                 }
-
-                $row['id'] = $id;
-                $row['kode_gejala'] = $kodeGejala;
-                $row['nama_gejala'] = ucwords($value[0]);
-                
-
-                $this->db->trans_start();
-
-                try {
-                    $this->db->insert('gejala', $row);
-                } catch (Exception $e) {
-                    $this->db->trans_rollback();
-                    return [
-                        'status' => false,
-                        'messages' => 'Error ' . $e->getMessage()
-                    ];
-                }
-                $this->db->trans_commit();
             }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            return [
+                'status' => false,
+                'messages' => 'Error ' . $e->getMessage()
+            ];
         }
+
+        $this->db->trans_commit();
 
         return [
             'status' => true,

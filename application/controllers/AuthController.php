@@ -39,6 +39,7 @@ class AuthController extends CI_Controller
             $session = [
                 'logged' => true,
                 'username' => $login['data']['username'],
+                'name' => $login['data']['nama_user'],
                 'role' => $login['data']['id_role'],
             ];
             $this->session->set_userdata($session);

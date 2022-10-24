@@ -30,6 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="box-body">
                         <div style="float: right;">
                             <button action="<?php echo base_url(); ?>penyakit/create" type="button" class="btn-add btn btn-flat btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
+                            <button action="<?php echo base_url(); ?>penyakit/createImport" type="button" class="btn-import btn btn-flat btn-sm btn-primary"><i class="fa fa-upload"></i> Import</button>
                         </div>
                         <br />
                         <br />
@@ -39,7 +40,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <th>No</th>
                                     <th>Kode Penyakit</th>
                                     <th>Nama Penyakit</th>
-                                    <th>Pengobatan Penyakit</th>
+                                    <th>Solusi Penyakit</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
