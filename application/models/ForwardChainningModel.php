@@ -1,0 +1,43 @@
+<?php
+
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class ForwardChainningModel extends CI_Model
+{
+    private function getGejala($id_gejala, $column)
+    {
+        $gejala = $this->db->select('*')->from('ms_gejala')->where(['id_ms_gejala' => $id_gejala])->get()->row_array();
+        return $gejala[$column];
+    }
+
+    public function getPrimaryGejala()
+    {
+        $primary_gejala = $this->db->select('*')->from('ms_gejala')->where(['is_utama' => 1])->get();
+        return $primary_gejala->result_array();
+    }
+
+    public function getChildGejala($id_gejala)
+    {
+        $gejala = [];
+        $child_gejala = $this->db->select('*')->from('rule_breadth')->where(['parent_ms_gejala' => $id_gejala])->group_by('child_ms_gejala')->get();
+        $arr_gejala = $child_gejala->result_array();
+        if(count($arr_gejala) > 0) {
+            foreach($arr_gejala as $key => $value) {
+                $temp = [];
+                $temp['id_ms_gejala'] = $value['child_ms_gejala'] == null ? null : $this->getGejala($value['child_ms_gejala'], 'id_ms_gejala');
+                $temp['kode_gejala'] = $value['child_ms_gejala'] == null ? null : $this->getGejala($value['child_ms_gejala'], 'kode_gejala');
+                $temp['nama_gejala'] = $value['child_ms_gejala'] == null ? null : $this->getGejala($value['child_ms_gejala'], 'nama_gejala');
+                $temp['is_utama'] = $value['child_ms_gejala'] == null ? null : $this->getGejala($value['child_ms_gejala'], 'is_utama');
+                $temp['is_priority'] = $value['child_ms_gejala'] == null ? null : $this->getGejala($value['child_ms_gejala'], 'is_priority');
+                $temp['id_ms_penyakit'] = $value['id_ms_penyakit'];
+                $gejala[] = $temp;
+            }
+        }
+        return $gejala;
+    }
+
+    public function checkPenyakitIfStop($id_gejala)
+    {
+        
+    }
+}

@@ -16,6 +16,7 @@ class KonsultasiController extends MainController
         $this->load->model('GejalaModel', 'gejala');
         $this->load->model('PenyakitModel', 'penyakit');
         $this->load->model('KonsultasiModel', 'konsultasi');
+        $this->load->model('ForwardChainningModel', 'fc');
     }
 
     private function setGejalaSebelum($gejala)
@@ -58,13 +59,44 @@ class KonsultasiController extends MainController
             redirect('auth/');
         }
 
-        $gejala = $this->gejala->getAllGejala();
-        $konsultasiIDExist = $this->konsultasi->checkIDExist();
+        // $gejala = $this->gejala->getAllGejala();
+        // $konsultasiIDExist = $this->konsultasi->checkIDExist();
+        // $layout = 'konsultasi/index';
+        // $data = [
+        //     'gejala' => $gejala,
+        //     'action' => base_url() . 'konsultasi/store',
+        //     'idKonsul' => $konsultasiIDExist
+        // ];
+        // $this->getLayout($layout, $data);
+        $gejala = $this->fc->getPrimaryGejala();
         $layout = 'konsultasi/index';
         $data = [
             'gejala' => $gejala,
-            'action' => base_url() . 'konsultasi/store',
-            'idKonsul' => $konsultasiIDExist
+            'action' => base_url() . 'konsultasi/nextQuestion'
+        ];
+        $this->getLayout($layout, $data);
+    }
+
+    public function nextQuestion()
+    {
+        if (!$this->session->userdata('logged')) {
+            redirect('auth/');
+        }
+
+        $post = $this->input->post();
+        if($post['gejala'] == NULL || $post['gejala'] == "") {
+            $url = base_url() . 'konsultasi';
+            $this->session->set_userdata([
+                'validation' => 'Silahkan untuk memilih salah satu gejala terlebih dahulu'
+            ]);
+            redirect($url);
+        }
+        
+        $gejala = $this->fc->getChildGejala($post['gejala']);
+        $layout = 'konsultasi/index';
+        $data = [
+            'gejala' => $gejala,
+            'action' => base_url() . 'konsultasi/nextQuestion'
         ];
         $this->getLayout($layout, $data);
     }

@@ -95,6 +95,7 @@ $route['konsultasi'] = 'KonsultasiController/index';
 $route['konsultasi/penjelasan_gejala/(:any)'] = 'KonsultasiController/penjelasanGejala/$1';
 // $route['konsultasi/ajax'] = 'KonsultasiController/ajax';
 $route['konsultasi/create'] = 'KonsultasiController/create';
+$route['konsultasi/nextQuestion'] = 'KonsultasiController/nextQuestion';
 $route['konsultasi/store'] = 'KonsultasiController/store';
 $route['konsultasi/edit/(:any)'] = 'KonsultasiController/edit/$1';
 $route['konsultasi/update/(:any)'] = 'KonsultasiController/update/$1';
