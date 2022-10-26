@@ -68,6 +68,8 @@ class KonsultasiController extends MainController
         //     'idKonsul' => $konsultasiIDExist
         // ];
         // $this->getLayout($layout, $data);
+        $id_user = $this->session->userdata('id_user');
+        $this->fc->removeTempKonsultasi($id_user);
         $gejala = $this->fc->getPrimaryGejala();
         $layout = 'konsultasi/index';
         $data = [
@@ -84,14 +86,24 @@ class KonsultasiController extends MainController
         }
 
         $post = $this->input->post();
-        if($post['gejala'] == NULL || $post['gejala'] == "") {
+        $id_user = $this->session->userdata('id_user');
+
+        $check_gejala = $this->fc->getTempKonsultasi($id_user, true);
+
+        if ($post['gejala'] == NULL || $post['gejala'] == "") {
             $url = base_url() . 'konsultasi';
             $this->session->set_userdata([
                 'validation' => 'Silahkan untuk memilih salah satu gejala terlebih dahulu'
             ]);
             redirect($url);
         }
-        
+
+        $param = [
+            "id_ms_gejala" => $post['gejala'],
+            "id_prev_gejala" => $check_gejala != null ? $check_gejala['id_ms_gejala'] : null,
+            "id_user" => $id_user
+        ];
+        $insert = $this->fc->insertTempKonsultasi($param);
         $gejala = $this->fc->getChildGejala($post['gejala']);
         $layout = 'konsultasi/index';
         $data = [

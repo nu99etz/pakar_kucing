@@ -519,6 +519,18 @@ ALTER TABLE `rule_breadth`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role` (`id`);
+
+
+CREATE TABLE tmp_konsultasi (
+	id_tmp_konsultasi int PRIMARY KEY AUTO_INCREMENT,
+    id_ms_gejala int,
+    id_prev_gejala int,
+    id_user int,
+    FOREIGN KEY(id_ms_gejala) REFERENCES ms_gejala(id_ms_gejala),
+    FOREIGN KEY(id_prev_gejala) REFERENCES ms_gejala(id_ms_gejala),
+    FOREIGN KEY(id_user) REFERENCES users(id)
+);
+  
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

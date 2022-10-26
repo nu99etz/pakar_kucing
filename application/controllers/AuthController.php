@@ -38,6 +38,7 @@ class AuthController extends CI_Controller
         } else if ($login['status'] == true) {
             $session = [
                 'logged' => true,
+                'id_user' => $login['data']['id'],
                 'username' => $login['data']['username'],
                 'name' => $login['data']['nama_user'],
                 'role' => $login['data']['id_role'],
