@@ -55,11 +55,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <!-- </div> -->
                             <div style="float: right;">
                                 <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-chevron-right"></i> Selanjutnya</button>
+                                <?php if ($gejala['is_priority'] == 0) {
+                                ?>
+                                    <button type="reset" class="btn btn-warning btn-flat"><i class="fa fa-repeat"></i> Cek Penyakit</button>
+                                <?php   } ?>
                                 <!-- <button type="reset" class="btn btn-warning btn-flat"><i class="fa fa-repeat"></i> Reset</button> -->
                             </div>
 
-                            <input type="hidden" name = "child_gejala" id="child_gejala" value="<?php echo $gejala['id_ms_gejala'];?>">
-                            <input type="hidden" name = "parent_gejala" id="parent_gejala" value="<?php echo $parent_gejala;?>">
+                            <input type="hidden" name="child_gejala" id="child_gejala" value="<?php echo $gejala['id_ms_gejala']; ?>">
+                            <input type="hidden" name="parent_gejala" id="parent_gejala" value="<?php echo $parent_gejala; ?>">
                         </div>
                     </div>
                 </form>

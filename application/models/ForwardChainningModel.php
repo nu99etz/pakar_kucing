@@ -38,6 +38,7 @@ class ForwardChainningModel extends CI_Model
 
     public function checkPenyakitIfStop($id_gejala)
     {
+        
     }
 
     public function insertTempKonsultasi($param)

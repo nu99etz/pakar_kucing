@@ -9,7 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pakar Penyakit Kucing</title>
+    <title>Pakar Penyakit Gigi</title>
     <?php $this->load->view('include/header'); ?>
 </head>
 

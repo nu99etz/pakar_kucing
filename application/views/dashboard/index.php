@@ -26,7 +26,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="alert alert-success alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h4><i class="icon fa fa-check"></i> <b>Selamat Datang <?php echo $this->session->userdata('username');?></b></h4>
-                    <b>Selamat Datang Di Sistem Pakar Penyakit Kucing<br /></b>
+                    <b>Selamat Datang Di Sistem Pakar Penyakit Gigi<br /></b>
                 </div>
             </div>
         </div>

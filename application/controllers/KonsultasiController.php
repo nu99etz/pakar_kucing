@@ -34,6 +34,34 @@ class KonsultasiController extends MainController
         return $this->gejalaSekarang;
     }
 
+    private function mappingKonsultasi($data)
+    {
+        $konsultasi = [];
+        foreach ($data as $key => $value) {
+            $row = [];
+            $row['kode_gejala'] = $this->gejala->getGejala($value['id_ms_gejala'], 'kode_gejala');
+            $row['nama_gejala'] = $this->gejala->getGejala($value['id_ms_gejala'], 'nama_gejala');
+            if ($value['answer'] == 0) {
+                $answer = 'Ya';
+            } else if ($value['answer'] == 1) {
+                $answer = 'Tidak';
+            }
+            $row['answer'] = $answer;
+            $konsultasi[] = $row;
+        }
+        return $konsultasi;
+    }
+
+    private function mappingPenyakit($data)
+    {
+        $penyakit = [];
+        $penyakit['id_ms_penyakit'] = $this->penyakit->getPenyakit($data, 'id_ms_penyakit');
+        $penyakit['kode_penyakit'] = $this->penyakit->getPenyakit($data, 'kode_penyakit');
+        $penyakit['nama_penyakit'] = $this->penyakit->getPenyakit($data, 'nama_penyakit');
+        $penyakit['solusi_penyakit'] = $this->penyakit->getPenyakit($data, 'solusi_penyakit');
+        return $penyakit;
+    }
+
     private function forwardChainning($gejala)
     {
         // masukkan gejala dengan jawaban ya ke gejala sebelum nya
@@ -98,6 +126,10 @@ class KonsultasiController extends MainController
         $post = $this->input->post();
         $id_user = $this->session->userdata('id_user');
 
+        if (!isset($post['answer'])) {
+            die("silahkan memilih jawaban terlebih dahulu");
+        }
+
         if ($post['parent_gejala'] == 0) {
             $parent_gejala = NULL;
         } else {
@@ -126,22 +158,32 @@ class KonsultasiController extends MainController
             }
         }
 
+        $konsul = $this->db->select('*')->from('tmp_konsultasi')->where([
+            'id_user' => $id_user
+        ])->get()->result_array();
+
         if ($post['parent_gejala'] == 0 && $post['answer'] == 1) {
             $sql = "select*from ms_gejala where is_utama = 1 and id_ms_gejala != 1 and id_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by id_ms_gejala desc limit 1";
             $gejala = $this->db->query($sql)->row_array();
 
             if (empty($gejala)) {
-                die("Penyakit not found");
+                $layout = 'konsultasi/form_konsultasi';
+                $data = [
+                    'konsultasi' => $this->mappingKonsultasi($konsul),
+                    'action' => '#',
+                    'penyakit' => NULL
+                ];
+                $this->getLayout($layout, $data);
+            } else {
+                $layout = 'konsultasi/index';
+                $data = [
+                    'parent_gejala' => 0,
+                    'gejala' => $gejala,
+                    'action' => base_url() . 'konsultasi/nextQuestion'
+                ];
+                $this->getLayout($layout, $data);
             }
-
-            $layout = 'konsultasi/index';
-            $data = [
-                'parent_gejala' => 0,
-                'gejala' => $gejala,
-                'action' => base_url() . 'konsultasi/nextQuestion'
-            ];
-            $this->getLayout($layout, $data);
-        } else if($post['parent_gejala'] == 0 && $post['answer'] == 0){
+        } else if ($post['parent_gejala'] == 0 && $post['answer'] == 0) {
             $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
             $aturan = $this->db->query($sql_aturan)->row_array();
 
@@ -156,35 +198,56 @@ class KonsultasiController extends MainController
             $layout = 'konsultasi/index';
             $this->getLayout($layout, $data);
         } else {
-            if($post['answer'] == 0) {
+            if ($post['answer'] == 0) {
 
                 // cek penyakit
                 $sql_cek_penyakit = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala = " . $post['child_gejala'];
                 $cek_penyakit = $this->db->query($sql_cek_penyakit)->row_array();
-                
-                if($cek_penyakit['id_ms_penyakit'] != null) {
-                    die("Penyakit ketemu");
-                }
 
-                // jika penyakit == null maka lanjut mencari gejala selanjutnya
-                $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
-                $aturan = $this->db->query($sql_aturan)->row_array();
+                if (!empty($cek_penyakit)) {
+                    if ($cek_penyakit['id_ms_penyakit'] != null) {
+                        // die("Penyakit ketemu");
+                        $layout = 'konsultasi/form_konsultasi';
+                        $data = [
+                            'konsultasi' => $this->mappingKonsultasi($konsul),
+                            'action' => '#',
+                            'penyakit' => $this->mappingPenyakit($cek_penyakit['id_ms_penyakit']),
+                        ];
+                        $this->getLayout($layout, $data);
+                    } else {
+                        // jika penyakit == null maka lanjut mencari gejala selanjutnya
+                        $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                        $aturan = $this->db->query($sql_aturan)->row_array();
 
-                $sql_gejala = "select*from ms_gejala where id_ms_gejala = " . $aturan['child_ms_gejala'];
-                $gejala = $this->db->query($sql_gejala)->row_array();
+                        if(empty($aturan)) {
+                            $sql_cek_penyakit = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . "";
+                            $cek_penyakit = $this->db->query($sql_cek_penyakit)->row_array();
 
-                $data = [
-                    'gejala' => $gejala,
-                    'parent_gejala' => $post['child_gejala'],
-                    'action' => base_url() . 'konsultasi/nextQuestion'
-                ];
-                $layout = 'konsultasi/index';
-                $this->getLayout($layout, $data);
-            } else if($post['answer'] == 1) {
-                $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
-                $aturan = $this->db->query($sql_aturan)->row_array();
+                            $layout = 'konsultasi/form_konsultasi';
+                            $data = [
+                                'konsultasi' => $this->mappingKonsultasi($konsul),
+                                'action' => '#',
+                                'penyakit' => $this->mappingPenyakit($cek_penyakit['id_ms_penyakit']),
+                            ];
+                            $this->getLayout($layout, $data);
+                        } else {
+                            $sql_gejala = "select*from ms_gejala where id_ms_gejala = " . $aturan['child_ms_gejala'];
+                            $gejala = $this->db->query($sql_gejala)->row_array();
 
-                if(!empty($aturan)) {
+                            $data = [
+                                'gejala' => $gejala,
+                                'parent_gejala' => $post['child_gejala'],
+                                'action' => base_url() . 'konsultasi/nextQuestion'
+                            ];
+                            $layout = 'konsultasi/index';
+                            $this->getLayout($layout, $data);
+                        }
+                    }
+                } else {
+                    // jika penyakit == null maka lanjut mencari gejala selanjutnya
+                    $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                    $aturan = $this->db->query($sql_aturan)->row_array();
+
                     $sql_gejala = "select*from ms_gejala where id_ms_gejala = " . $aturan['child_ms_gejala'];
                     $gejala = $this->db->query($sql_gejala)->row_array();
 
@@ -195,8 +258,45 @@ class KonsultasiController extends MainController
                     ];
                     $layout = 'konsultasi/index';
                     $this->getLayout($layout, $data);
+                }
+            } else if ($post['answer'] == 1) {
+                $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                $aturan = $this->db->query($sql_aturan)->row_array();
+
+                if (!empty($aturan)) {
+
+                    if ($aturan['id_ms_penyakit'] != null) {
+                        $layout = 'konsultasi/form_konsultasi';
+                        $data = [
+                            'konsultasi' => $this->mappingKonsultasi($konsul),
+                            'action' => '#',
+                            'penyakit' => $this->mappingPenyakit($aturan['id_ms_penyakit'])
+                        ];
+                        $this->getLayout($layout, $data);
+                    } else {
+                        $sql_gejala = "select*from ms_gejala where id_ms_gejala = " . $aturan['child_ms_gejala'];
+                        $gejala = $this->db->query($sql_gejala)->row_array();
+
+                        $data = [
+                            'gejala' => $gejala,
+                            'parent_gejala' => $post['child_gejala'],
+                            'action' => base_url() . 'konsultasi/nextQuestion'
+                        ];
+                        $layout = 'konsultasi/index';
+                        $this->getLayout($layout, $data);
+                    }
                 } else {
-                    die("Penyakit not found");
+                    $this->maintence->Debug($post['child_gejala']);
+                    $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                    $aturan = $this->db->query($sql_aturan)->row_array();
+                    
+                    $layout = 'konsultasi/form_konsultasi';
+                    $data = [
+                        'konsultasi' => $this->mappingKonsultasi($konsul),
+                        'action' => '#',
+                        'penyakit' => NULL
+                    ];
+                    $this->getLayout($layout, $data);
                 }
             }
         }
