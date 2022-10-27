@@ -34,32 +34,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <form id="konsultasi" method="post" action="<?php echo $action; ?>" enctype="multipart/form-data">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">[ <?php echo $gejala['kode_gejala']; ?> ] - Apakah <?php echo $gejala['nama_gejala']; ?> ?</h3>
+                            <h3 class="box-title">Silahkan memilih salah satu gejala</h3>
                         </div>
                         <div class="box-body">
                             <!-- <div class="row"> -->
                             <div class="form-group">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="answer" id="answer" value="0">
-                                        Ya
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="answer" id="answer" value="1">
-                                        Tidak
-                                    </label>
-                                </div>
+                                <?php foreach ($gejala as $key => $value) {
+                                ?>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="gejala" id="<?php echo $value['id_ms_gejala']; ?>" value="<?php echo $value['id_ms_gejala']; ?>">
+                                            <?php echo $value['kode_gejala'] . " - " . $value['nama_gejala']; ?>
+                                        </label>
+                                    </div>
+                                <?php  } ?>
                             </div>
                             <!-- </div> -->
                             <div style="float: right;">
                                 <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-chevron-right"></i> Selanjutnya</button>
                                 <!-- <button type="reset" class="btn btn-warning btn-flat"><i class="fa fa-repeat"></i> Reset</button> -->
                             </div>
-
-                            <input type="hidden" name = "child_gejala" id="child_gejala" value="<?php echo $gejala['id_ms_gejala'];?>">
-                            <input type="hidden" name = "parent_gejala" id="parent_gejala" value="<?php echo $parent_gejala;?>">
                         </div>
                     </div>
                 </form>
