@@ -61,11 +61,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <?php if ($this->session->userdata('role') == 1) {
             ?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url(); ?>rep_konsultasi">
                         <i class="fa fa-file-excel-o"></i> <span>Laporan Konsultasi</span>
                     </a>
-                </li>
+                </li> -->
             <?php    } ?>
 
         </ul>

@@ -163,14 +163,14 @@ class KonsultasiController extends MainController
         ])->get()->result_array();
 
         if ($post['parent_gejala'] == 0 && $post['answer'] == 1) {
-            $sql = "select*from ms_gejala where is_utama = 1 and id_ms_gejala != 1 and id_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by id_ms_gejala desc limit 1";
+            $sql = "select*from ms_gejala where is_utama = 1 and id_ms_gejala != 1 and id_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by id_ms_gejala asc limit 1";
             $gejala = $this->db->query($sql)->row_array();
 
             if (empty($gejala)) {
                 $layout = 'konsultasi/form_konsultasi';
                 $data = [
                     'konsultasi' => $this->mappingKonsultasi($konsul),
-                    'action' => '#',
+                    'action' => base_url() . "konsultasi/store",
                     'penyakit' => NULL
                 ];
                 $this->getLayout($layout, $data);
@@ -184,7 +184,7 @@ class KonsultasiController extends MainController
                 $this->getLayout($layout, $data);
             }
         } else if ($post['parent_gejala'] == 0 && $post['answer'] == 0) {
-            $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+            $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by child_ms_gejala asc limit 1";
             $aturan = $this->db->query($sql_aturan)->row_array();
 
             $sql_gejala = "select*from ms_gejala where id_ms_gejala = " . $aturan['child_ms_gejala'];
@@ -210,23 +210,23 @@ class KonsultasiController extends MainController
                         $layout = 'konsultasi/form_konsultasi';
                         $data = [
                             'konsultasi' => $this->mappingKonsultasi($konsul),
-                            'action' => '#',
+                            'action' => base_url() . "konsultasi/store",
                             'penyakit' => $this->mappingPenyakit($cek_penyakit['id_ms_penyakit']),
                         ];
                         $this->getLayout($layout, $data);
                     } else {
                         // jika penyakit == null maka lanjut mencari gejala selanjutnya
-                        $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                        $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by child_ms_gejala asc limit 1";
                         $aturan = $this->db->query($sql_aturan)->row_array();
 
-                        if(empty($aturan)) {
+                        if (empty($aturan)) {
                             $sql_cek_penyakit = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . "";
                             $cek_penyakit = $this->db->query($sql_cek_penyakit)->row_array();
 
                             $layout = 'konsultasi/form_konsultasi';
                             $data = [
                                 'konsultasi' => $this->mappingKonsultasi($konsul),
-                                'action' => '#',
+                                'action' => base_url() . "konsultasi/store",
                                 'penyakit' => $this->mappingPenyakit($cek_penyakit['id_ms_penyakit']),
                             ];
                             $this->getLayout($layout, $data);
@@ -245,7 +245,7 @@ class KonsultasiController extends MainController
                     }
                 } else {
                     // jika penyakit == null maka lanjut mencari gejala selanjutnya
-                    $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                    $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['child_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by child_ms_gejala asc limit 1";
                     $aturan = $this->db->query($sql_aturan)->row_array();
 
                     $sql_gejala = "select*from ms_gejala where id_ms_gejala = " . $aturan['child_ms_gejala'];
@@ -260,7 +260,7 @@ class KonsultasiController extends MainController
                     $this->getLayout($layout, $data);
                 }
             } else if ($post['answer'] == 1) {
-                $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by child_ms_gejala asc limit 1";
                 $aturan = $this->db->query($sql_aturan)->row_array();
 
                 if (!empty($aturan)) {
@@ -269,7 +269,7 @@ class KonsultasiController extends MainController
                         $layout = 'konsultasi/form_konsultasi';
                         $data = [
                             'konsultasi' => $this->mappingKonsultasi($konsul),
-                            'action' => '#',
+                            'action' => base_url() . "konsultasi/store",
                             'penyakit' => $this->mappingPenyakit($aturan['id_ms_penyakit'])
                         ];
                         $this->getLayout($layout, $data);
@@ -279,21 +279,21 @@ class KonsultasiController extends MainController
 
                         $data = [
                             'gejala' => $gejala,
-                            'parent_gejala' => $post['child_gejala'],
+                            'parent_gejala' => $post['parent_gejala'],
                             'action' => base_url() . 'konsultasi/nextQuestion'
                         ];
                         $layout = 'konsultasi/index';
                         $this->getLayout($layout, $data);
                     }
                 } else {
-                    $this->maintence->Debug($post['child_gejala']);
-                    $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) limit 1";
+                    // $this->maintence->Debug($post['child_gejala']);
+                    $sql_aturan = "select*from rule_breadth where parent_ms_gejala = " . $post['parent_gejala'] . " and child_ms_gejala not in (select id_ms_gejala from tmp_konsultasi) order by child_ms_gejala asc limit 1";
                     $aturan = $this->db->query($sql_aturan)->row_array();
-                    
+
                     $layout = 'konsultasi/form_konsultasi';
                     $data = [
                         'konsultasi' => $this->mappingKonsultasi($konsul),
-                        'action' => '#',
+                        'action' => base_url() . "konsultasi/store",
                         'penyakit' => NULL
                     ];
                     $this->getLayout($layout, $data);
@@ -305,116 +305,30 @@ class KonsultasiController extends MainController
     public function store()
     {
         $post = $this->input->post();
+        $id_user = $this->session->userdata('id_user');
 
-        if ($post['nama_pemilik_hewan'] == "" || $post['nama_hewan'] == "") {
-            $url = base_url() . 'konsultasi';
-            $this->session->set_userdata([
-                'validation' => 'Silahkan untuk mengisi data diri terlebih dahulu'
-            ]);
-            redirect($url);
-        }
-
-        $nodeJawabanYa = [];
-        $penyakitNode = [];
-        foreach ($post['jawaban'] as $key => $value) {
-            // cek semua jawaban node jika jawaban ya maka gabung node menjadi satu
-            if (isset($value)) {
-                if ($value == 0) {
-                    $nodeJawabanYa[] = $key;
-                    $penyakit = $this->forwardChainning($key);
-
-                    if (!empty($penyakit)) {
-                        $penyakitNode[] = $penyakit;
-                        $nodeAkhir = $penyakit;
-                    }
-                }
-            }
-        }
-
-        if (count($nodeJawabanYa) >= 6) {
-            $implodeJawabanYa = implode(',', $nodeJawabanYa);
-
-            if (!empty($nodeAkhir)) {
-                // cocokan node dan hasil query dari aturan
-                $cocok = [];
-                foreach ($nodeAkhir as $value) {
-                    if ($implodeJawabanYa == $value['gejala']) {
-                        // jika cocok berikan nilai 0
-                        $cocok[$value['id_penyakit']] = 0;
-                    } else {
-                        // jika tidak cocok beri nilai 1
-                        $cocok[$value['id_penyakit']] = 1;
-                    }
-                }
-
-                // $this->maintence->Debug($cocok);
-
-                // cek apakah ada nilai 0 dalam setiap kecocokan node
-                foreach ($cocok as $key => $value) {
-                    if ($value == 0) {
-                        $cekPenyakit = $key;
-                    }
-                }
-
-                // jika setiap node tidak kecocokan maka tampilkan semua aturan yang diperoleh dari node tersebut sehingga akan menampilkan beberapa penyakit dikarenakan tidak ada kecocokan antar node
-                if (empty($cekPenyakit)) {
-                    $penyakit = [];
-                    foreach ($cocok as $key => $value) {
-                        $penyakit[] = $this->penyakit->getPenyakit($key);
-                    }
-                    $kemungkinan = 0;
-                } else {
-                    $penyakit = [];
-                    $penyakit[] = $this->penyakit->getPenyakit($cekPenyakit);
-                    $kemungkinan = 1;
-                }
-
-                $jawabanDipilih = [];
-                foreach ($post['jawaban'] as $key => $value) {
-                    $gejalaV = $this->gejala->getGejala($key);
-                    if ($value == 0) {
-                        $jawaban = 'Ya';
-                    } else if ($value == 1) {
-                        $jawaban = 'Tidak';
-                    }
-                    $jawabanDipilih[] = [
-                        'gejala' => $gejalaV,
-                        'jawaban' => $jawaban
-                    ];
-                }
-            } else {
-                $penyakit = [];
-                $jawabanDipilih = [];
-            }
-
-            $data = [
-                'jawabanYa' => $jawabanDipilih,
-                'penyakit' => $penyakit,
-                'kemungkinan' => $kemungkinan,
-                'dataDiri' => [
-                    'id' => $post['id_konsul'],
-                    'nama_pemilik_hewan' => $post['nama_pemilik_hewan'],
-                    'nama_hewan' => $post['nama_hewan'],
-                    'usia_hewan' => $post['usia_hewan'],
-                    'tanggal_konsultasi' => date('Y-m-d'),
-                ]
+        $konsultasi = $this->konsultasi->getTempKonsultasi($id_user);
+        $param = [
+            "id_user" => $id_user,
+            "id_penyakit" => $post['id_penyakit'],
+            "tanggal_konsultasi" => date('Y-m-d'),
+            "konsultasi" => $konsultasi
+        ];
+        $insert_konsultasi = $this->konsultasi->storeKonsultasi($param);
+        if ($insert_konsultasi) {
+            $this->fc->removeTempKonsultasi($id_user);
+            $response = [
+                'status' => 200,
+                'messages' => "Konsultasi berhasil disimpan",
+                'url' => base_url()
             ];
-
-            // $this->maintence->Debug($data);
-
-            $this->konsultasi->insertKonsultasi($data);
-
-            $layout = 'konsultasi/hasil_konsultasi';
-
-            $this->getLayout($layout, $data);
         } else {
-            // jika belum memilih satu gejala keluar alert dan kembali ke menu konsultasi
-            $url = base_url() . 'konsultasi';
-            $this->session->set_userdata([
-                'validation' => 'Silahkan memilih minimal 6 gejala'
-            ]);
-            redirect($url);
+            $response = [
+                'status' => 200,
+                'messages' => "Konsultasi gagal disimpan"
+            ];
         }
+        echo json_encode($response);
     }
 
     public function ajax()
