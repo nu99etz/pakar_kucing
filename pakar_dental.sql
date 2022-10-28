@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Oct 25, 2022 at 09:49 PM
--- Server version: 10.6.7-MariaDB-2ubuntu1.1
--- PHP Version: 8.1.11
+-- Host: 127.0.0.1
+-- Generation Time: Oct 28, 2022 at 01:02 PM
+-- Server version: 10.4.25-MariaDB
+-- PHP Version: 7.4.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,59 @@ SET time_zone = "+00:00";
 --
 -- Database: `pakar_dental`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail_konsultasi`
+--
+
+CREATE TABLE `detail_konsultasi` (
+  `id_detail_konsultasi` int(11) NOT NULL,
+  `id_konsultasi` int(11) DEFAULT NULL,
+  `id_gejala` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `detail_konsultasi`
+--
+
+INSERT INTO `detail_konsultasi` (`id_detail_konsultasi`, `id_konsultasi`, `id_gejala`) VALUES
+(1, 1, 1),
+(2, 1, 4),
+(3, 1, 5),
+(4, 1, 27),
+(5, 1, 28),
+(6, 2, 1),
+(7, 2, 3),
+(8, 2, 4),
+(9, 2, 55),
+(10, 2, 56),
+(11, 2, 57),
+(12, 2, 58),
+(13, 2, 59),
+(14, 2, 60);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `konsultasi`
+--
+
+CREATE TABLE `konsultasi` (
+  `id_konsultasi` int(11) NOT NULL,
+  `id_user` int(11) DEFAULT NULL,
+  `id_penyakit` int(11) DEFAULT NULL,
+  `tanggal_konsultasi` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `konsultasi`
+--
+
+INSERT INTO `konsultasi` (`id_konsultasi`, `id_user`, `id_penyakit`, `tanggal_konsultasi`) VALUES
+(1, 1, 5, '2022-10-28'),
+(2, 1, 14, '2022-10-28');
 
 -- --------------------------------------------------------
 
@@ -389,6 +442,20 @@ INSERT INTO `rule_breadth` (`id_rule_breadth`, `id_rule`, `parent_ms_gejala`, `c
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tmp_konsultasi`
+--
+
+CREATE TABLE `tmp_konsultasi` (
+  `id_tmp_konsultasi` int(11) NOT NULL,
+  `id_ms_gejala` int(11) DEFAULT NULL,
+  `id_prev_gejala` int(11) DEFAULT NULL,
+  `id_user` int(11) DEFAULT NULL,
+  `answer` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -412,6 +479,22 @@ INSERT INTO `users` (`id`, `id_role`, `nama_user`, `username`, `password`, `crea
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `detail_konsultasi`
+--
+ALTER TABLE `detail_konsultasi`
+  ADD PRIMARY KEY (`id_detail_konsultasi`),
+  ADD KEY `detail_konsultasi_ibfk_1` (`id_konsultasi`),
+  ADD KEY `detail_konsultasi_ibfk_2` (`id_gejala`);
+
+--
+-- Indexes for table `konsultasi`
+--
+ALTER TABLE `konsultasi`
+  ADD PRIMARY KEY (`id_konsultasi`),
+  ADD KEY `id_user` (`id_user`),
+  ADD KEY `id_penyakit` (`id_penyakit`);
 
 --
 -- Indexes for table `ms_gejala`
@@ -449,6 +532,15 @@ ALTER TABLE `rule_breadth`
   ADD KEY `rule_breadth_ibfk_4` (`id_ms_penyakit`);
 
 --
+-- Indexes for table `tmp_konsultasi`
+--
+ALTER TABLE `tmp_konsultasi`
+  ADD PRIMARY KEY (`id_tmp_konsultasi`),
+  ADD KEY `tmp_konsultasi_ibfk_1` (`id_ms_gejala`),
+  ADD KEY `tmp_konsultasi_ibfk_2` (`id_prev_gejala`),
+  ADD KEY `tmp_konsultasi_ibfk_3` (`id_user`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -458,6 +550,18 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `detail_konsultasi`
+--
+ALTER TABLE `detail_konsultasi`
+  MODIFY `id_detail_konsultasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `konsultasi`
+--
+ALTER TABLE `konsultasi`
+  MODIFY `id_konsultasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ms_gejala`
@@ -490,6 +594,12 @@ ALTER TABLE `rule_breadth`
   MODIFY `id_rule_breadth` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
+-- AUTO_INCREMENT for table `tmp_konsultasi`
+--
+ALTER TABLE `tmp_konsultasi`
+  MODIFY `id_tmp_konsultasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=171;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -498,6 +608,20 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `detail_konsultasi`
+--
+ALTER TABLE `detail_konsultasi`
+  ADD CONSTRAINT `detail_konsultasi_ibfk_1` FOREIGN KEY (`id_konsultasi`) REFERENCES `konsultasi` (`id_konsultasi`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detail_konsultasi_ibfk_2` FOREIGN KEY (`id_gejala`) REFERENCES `ms_gejala` (`id_ms_gejala`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `konsultasi`
+--
+ALTER TABLE `konsultasi`
+  ADD CONSTRAINT `konsultasi_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `konsultasi_ibfk_2` FOREIGN KEY (`id_penyakit`) REFERENCES `ms_penyakit` (`id_ms_penyakit`);
 
 --
 -- Constraints for table `rule`
@@ -515,22 +639,18 @@ ALTER TABLE `rule_breadth`
   ADD CONSTRAINT `rule_breadth_ibfk_4` FOREIGN KEY (`id_ms_penyakit`) REFERENCES `ms_penyakit` (`id_ms_penyakit`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `tmp_konsultasi`
+--
+ALTER TABLE `tmp_konsultasi`
+  ADD CONSTRAINT `tmp_konsultasi_ibfk_1` FOREIGN KEY (`id_ms_gejala`) REFERENCES `ms_gejala` (`id_ms_gejala`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tmp_konsultasi_ibfk_2` FOREIGN KEY (`id_prev_gejala`) REFERENCES `ms_gejala` (`id_ms_gejala`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tmp_konsultasi_ibfk_3` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role` (`id`);
-
-
-CREATE TABLE tmp_konsultasi (
-	id_tmp_konsultasi int PRIMARY KEY AUTO_INCREMENT,
-    id_ms_gejala int,
-    id_prev_gejala int,
-    id_user int,
-    FOREIGN KEY(id_ms_gejala) REFERENCES ms_gejala(id_ms_gejala),
-    FOREIGN KEY(id_prev_gejala) REFERENCES ms_gejala(id_ms_gejala),
-    FOREIGN KEY(id_user) REFERENCES users(id)
-);
-  
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
