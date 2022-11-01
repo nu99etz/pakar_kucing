@@ -55,7 +55,9 @@ $route['translate_uri_dashes'] = FALSE;
 
 // Auth
 $route['auth'] = 'AuthController/index';
+$route['auth/register'] = 'AuthController/register';
 $route['auth/doLogin'] = 'AuthController/doLogin';
+$route['auth/doRegister'] = 'AuthController/doRegister';
 $route['auth/doLogout'] = 'AuthController/doLogout';
 
 // Route Gejala

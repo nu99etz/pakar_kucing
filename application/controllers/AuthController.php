@@ -23,6 +23,19 @@ class AuthController extends CI_Controller
         $this->load->view('auth/index', $data);
     }
 
+    public function register()
+    {
+        if ($this->session->userdata('logged')) {
+            redirect('/');
+        }
+
+        $data = [
+            'action' => base_url() . 'auth/doRegister'
+        ];
+        $this->load->view('include/header');
+        $this->load->view('auth/register', $data);
+    }
+
     public function doLogin()
     {
         if ($this->session->userdata('logged')) {
@@ -47,6 +60,29 @@ class AuthController extends CI_Controller
             $response = [
                 'status' => 200,
                 'messages' => $login['messages'],
+                'url' => base_url()
+            ];
+        }
+
+        echo json_encode($response);
+    }
+
+    public function doRegister()
+    {
+        if ($this->session->userdata('logged')) {
+            redirect('/');
+        }
+
+        $register = $this->auth->doRegister();
+        if ($register['status'] == false) {
+            $response = [
+                'status' => 422,
+                'messages' => $register['messages']
+            ];
+        } else if ($register['status'] == true) {
+            $response = [
+                'status' => 200,
+                'messages' => $register['messages'],
                 'url' => base_url()
             ];
         }
