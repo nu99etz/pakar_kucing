@@ -87,24 +87,8 @@ class KonsultasiController extends MainController
             redirect('auth/');
         }
 
-        // $gejala = $this->gejala->getAllGejala();
-        // $konsultasiIDExist = $this->konsultasi->checkIDExist();
-        // $layout = 'konsultasi/index';
-        // $data = [
-        //     'gejala' => $gejala,
-        //     'action' => base_url() . 'konsultasi/store',
-        //     'idKonsul' => $konsultasiIDExist
-        // ];
-        // $this->getLayout($layout, $data);
         $id_user = $this->session->userdata('id_user');
         $this->fc->removeTempKonsultasi($id_user);
-        // $gejala = $this->fc->getPrimaryGejala();
-        // $layout = 'konsultasi/index';
-        // $data = [
-        //     'gejala' => $gejala,
-        //     'action' => base_url() . 'konsultasi/nextQuestion'
-        // ];
-        // $this->getLayout($layout, $data);
 
         $sql = "select*from ms_gejala where id_ms_gejala = 1 and is_utama = 1";
         $gejala = $this->db->query($sql)->row_array();
