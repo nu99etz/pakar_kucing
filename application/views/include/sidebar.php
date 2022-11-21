@@ -40,6 +40,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </span>
                     </a>
                     <ul class="treeview-menu">
+                        <li><a href="<?php echo base_url(); ?>kategori_gejala"><i class="fa fa-database"></i> Master Kategori Gejala</a></li>
                         <li><a href="<?php echo base_url(); ?>gejala"><i class="fa fa-database"></i> Master Gejala</a></li>
                         <li><a href="<?php echo base_url(); ?>penyakit"><i class="fa fa-database"></i> Master Penyakit</a></li>
                     </ul>

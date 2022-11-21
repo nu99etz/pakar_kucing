@@ -20,55 +20,74 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <!-- Main content -->
     <section class="content">
-        <div class="row">
-            <div class="col-xs-12">
-                <?php if ($this->session->userdata('validation')) {
-                ?>
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <h4><i class="icon fa fa-ban"></i> <b>Gagal!</b></h4>
-                        <b><?php echo $this->session->userdata('validation'); ?></b>
-                    </div>
-                <?php $this->session->unset_userdata('validation');
-                } ?>
-                <form id="konsultasi" method="post" action="<?php echo $action; ?>" enctype="multipart/form-data">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">[ <?php echo $gejala['kode_gejala']; ?> ] - Apakah <?php echo $gejala['nama_gejala']; ?> ?</h3>
-                        </div>
-                        <div class="box-body">
-                            <!-- <div class="row"> -->
-                            <div class="form-group">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="answer" id="answer" value="0">
-                                        Ya
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="answer" id="answer" value="1">
-                                        Tidak
-                                    </label>
-                                </div>
-                            </div>
-                            <!-- </div> -->
-                            <div style="float: right;">
-                                <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-chevron-right"></i> Selanjutnya</button>
-                                <?php if ($gejala['is_priority'] == 0) {
-                                ?>
-                                    <button type="reset" class="btn btn-warning btn-flat"><i class="fa fa-repeat"></i> Cek Penyakit</button>
-                                <?php   } ?>
-                                <!-- <button type="reset" class="btn btn-warning btn-flat"><i class="fa fa-repeat"></i> Reset</button> -->
-                            </div>
 
-                            <input type="hidden" name="child_gejala" id="child_gejala" value="<?php echo $gejala['id_ms_gejala']; ?>">
-                            <input type="hidden" name="parent_gejala" id="parent_gejala" value="<?php echo $parent_gejala; ?>">
-                        </div>
-                    </div>
-                </form>
+        <?php if ($this->session->userdata('validation')) {
+        ?>
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-ban"></i> <b>Gagal!</b></h4>
+                <b><?php echo $this->session->userdata('validation'); ?></b>
             </div>
-        </div>
+        <?php $this->session->unset_userdata('validation');
+        } ?>
+        <form id="konsultasi" method="post" action="<?php echo $action; ?>" enctype="multipart/form-data">
+
+            <!-- Default box -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Form Konsultasi</h3>
+                </div>
+                <div class="box-body">
+                    <table width="100%" class="table table-bordered table-hover">
+                        <thead>
+                            <th>No</th>
+                            <th>Kategori Gejala</th>
+                            <th>Nama Gejala</th>
+                            <th>Jawaban</th>
+                        </thead>
+                        <tbody>
+                            <?php $no = 1;
+                            foreach ($gejala as $key => $value) {
+                                foreach ($value as $key_value => $value_gejala) {
+                            ?>
+                                    <tr>
+                                        <td><?php echo $no; ?></td>
+                                        <?php if ($key_value == 0) {
+                                        ?>
+                                            <td rowspan="<?php echo count($value); ?>" style="vertical-align : middle;text-align:center;"><?php echo $key; ?></td>
+                                        <?php   } else {
+                                        ?>
+                                            <!-- <td></td> -->
+                                        <?php   } ?>
+                                        <td><?php echo "[ " . $value_gejala['kode_gejala'] . " ] - " . $value_gejala['nama_gejala']; ?></td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="jawaban[<?php echo $value_gejala['id_ms_gejala']; ?>]" id="jawaban" value="0">
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            <?php $no++;
+                                }
+                            } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <div style="float: right;">
+                                        <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-save"></i> Simpan</button>
+                                        <button type="reset" class="btn btn-warning btn-flat"><i class="fa fa-repeat"></i> Reset</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </form>
     </section>
     <!-- /.content -->
 </div>

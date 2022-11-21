@@ -21,6 +21,21 @@ class KonsultasiModel extends CI_Model
     //     return $konsultasi->result_array();
     // }
 
+    public function getAllGejalaGrouping()
+    {
+        $sql = $this->db->select('*')
+            ->from('ms_gejala')
+            ->join('ms_kategori_gejala', 'ms_kategori_gejala.id_ms_kategori_gejala = ms_gejala.id_ms_kategori_gejala', 'left')
+            ->order_by('ms_gejala.id_ms_kategori_gejala', 'ASC')
+            ->get();
+        $gejala = $sql->result_array();
+        $data = [];
+        foreach($gejala as $key => $value) {
+            $data[$value['nama_ms_kategori']][] = $value;
+        }
+        return $data;
+    }
+
     public function getAllKonsultasi($where = null)
     {
         $konsultasi = $this->db->select('*')->from('konsultasi');

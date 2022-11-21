@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once('MainController.php');
 
-class GejalaController extends MainController
+class KategoriGejalaController extends MainController
 {
     public function __construct()
     {
@@ -12,23 +12,20 @@ class GejalaController extends MainController
         if (!$this->session->userdata('logged') || $this->session->userdata('role') != 1) {
             redirect('auth/');
         }
-        $this->load->model('GejalaModel', 'gejala');
         $this->load->model('KategoriGejalaModel', 'kategori_gejala');
     }
 
     public function ajax()
     {
-        $data = $this->gejala->getAllGejala();
+        $data = $this->kategori_gejala->getAllKategoriGejala();
         $no = 1;
         $record = [];
         foreach ($data as $value) {
             $row = [];
             $row[] = $no;
-            $row[] = $value['kode_gejala'];
             $row[] = $value['nama_ms_kategori'];
-            $row[] = $value['nama_gejala'];
-            $button = '<button type="button" name="update" action="' . base_url() . 'gejala/edit/' . $value['id_ms_gejala'] . '" class="btn-edit btn btn-flat btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
-            $button .= '<button type="button" name="delete" action="' . base_url() . 'gejala/destroy/' . $value['id_ms_gejala'] . '" class="btn-delete btn btn-flat btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
+            $button = '<button type="button" name="update" action="' . base_url() . 'kategori_gejala/edit/' . $value['id_ms_kategori_gejala'] . '" class="btn-edit btn btn-flat btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
+            $button .= '<button type="button" name="delete" action="' . base_url() . 'kategori_gejala/destroy/' . $value['id_ms_kategori_gejala'] . '" class="btn-delete btn btn-flat btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
             $row[] = $button;
             $no++;
             $record[] = $row;
@@ -40,24 +37,22 @@ class GejalaController extends MainController
 
     public function index()
     {
-        $layout = 'gejala/index';
+        $layout = 'kategori_gejala/index';
         $this->getLayout($layout);
     }
 
     public function create()
     {
-        $layout = 'gejala/form';
-        $kategori_gejala = $this->kategori_gejala->getAllKategoriGejala();
+        $layout = 'kategori_gejala/form';
         $data = [
-            'kategori_gejala' => $kategori_gejala,
-            'action' => base_url() . 'gejala/store',
+            'action' => base_url() . 'kategori_gejala/store',
         ];
         $this->load->view($layout, $data);
     }
 
     public function store()
     {
-        $store = $this->gejala->store();
+        $store = $this->kategori_gejala->store();
         if ($store['status'] == true) {
             $response = [
                 'status' => 200,
@@ -74,20 +69,18 @@ class GejalaController extends MainController
 
     public function edit($id)
     {
-        $layout = 'gejala/form';
-        $kategori_gejala = $this->kategori_gejala->getAllKategoriGejala();
-        $gejala = $this->gejala->getGejala($id);
+        $layout = 'kategori_gejala/form';
+        $kategori_gejala = $this->kategori_gejala->getKategoriGejala($id);
         $data = [
-            'gejala' => $gejala,
             'kategori_gejala' => $kategori_gejala,
-            'action' => base_url() . 'gejala/update/' . $id,
+            'action' => base_url() . 'kategori_gejala/update/' . $id,
         ];
         $this->load->view($layout, $data);
     }
 
     public function update($id)
     {
-        $update = $this->gejala->update($id);
+        $update = $this->kategori_gejala->update($id);
         if ($update['status'] == true) {
             $response = [
                 'status' => 200,
@@ -104,7 +97,7 @@ class GejalaController extends MainController
 
     public function destroy($id)
     {
-        $destroy = $this->gejala->destroy($id);
+        $destroy = $this->kategori_gejala->destroy($id);
         if ($destroy['status'] == true) {
             $response = [
                 'status' => 200,
@@ -121,10 +114,10 @@ class GejalaController extends MainController
 
     public function penjelasanGejala($id)
     {
-        $layout = 'gejala/form_penjelasan';
-        $gejala = $this->gejala->getGejala($id);
+        $layout = 'kategori_gejala/form_penjelasan';
+        $kategori_gejala = $this->kategori_gejala->getGejala($id);
         $data = [
-            'gejala' => $gejala,
+            'kategori_gejala' => $kategori_gejala,
         ];
         $this->load->view($layout, $data);
     }
@@ -132,31 +125,8 @@ class GejalaController extends MainController
     public function createImport()
     {
         $data = [
-            'action' => base_url() . 'gejala/importExcel',
+            'action' => base_url() . 'kategori_gejala/importExcel',
         ];
-        return $this->load->view('gejala/form_import', $data);
-    }
-
-    public function importExcel()
-    {
-        $data = $this->import_excel($_FILES['upload'], 'xlsx');
-
-        $this->maintence->Debug($data);
-
-        if ($data['status'] == 500) {
-            $response = [
-                'status' => 422,
-                'messages' => $data['messages']
-            ];
-        } else if ($data['status'] == 200) {
-
-            $import_excel = $this->gejala->importExcel($data['data']);
-            $response = [
-                'status' => $import_excel['status'] == false ? 422 : 200,
-                'messages' => $import_excel['messages']
-            ];
-        }
-
-        echo json_encode($response);
+        return $this->load->view('kategori_gejala/form_import', $data);
     }
 }

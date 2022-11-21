@@ -9,7 +9,7 @@ class GejalaModel extends CI_Model
 
     public function getAllGejala()
     {
-        $sql = $this->db->select('*')->from('ms_gejala')->get();
+        $sql = $this->db->select('*')->from('ms_gejala')->join('ms_kategori_gejala', 'ms_kategori_gejala.id_ms_kategori_gejala = ms_gejala.id_ms_kategori_gejala', 'left')->get();
         $query = $sql->result_array();
         return $query;
     }
@@ -40,8 +40,8 @@ class GejalaModel extends CI_Model
                 $id = 1;
                 $kodeGejala = 'G01';
             } else {
-                $id = $query['id'] + 1;
-                if ($id < 100) {
+                $id = $query['id_ms_gejala'] + 1;
+                if ($id < 10) {
                     $kodeGejala = 'G0' . $id;
                 } else {
                     $kodeGejala = 'G' . $id;
@@ -50,10 +50,9 @@ class GejalaModel extends CI_Model
 
             $data = [
                 'id_ms_gejala' => $id,
+                'id_ms_kategori_gejala' => $post['id_ms_kategori_gejala'],
                 'kode_gejala' => $kodeGejala,
                 'nama_gejala' => ucwords($post['nama_gejala']),
-                'is_utama' => $post['is_utama'],
-                'is_priority' => $post['is_priority']
             ];
 
             $this->db->trans_begin();
@@ -92,8 +91,7 @@ class GejalaModel extends CI_Model
 
             $data = [
                 'nama_gejala' => ucwords($post['nama_gejala']),
-                'is_utama' => $post['is_utama'],
-                'is_priority' => $post['is_priority']
+                'id_ms_kategori_gejala' => $post['id_ms_kategori_gejala'],
             ];
 
             $this->db->trans_begin();

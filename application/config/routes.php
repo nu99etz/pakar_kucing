@@ -60,6 +60,15 @@ $route['auth/doLogin'] = 'AuthController/doLogin';
 $route['auth/doRegister'] = 'AuthController/doRegister';
 $route['auth/doLogout'] = 'AuthController/doLogout';
 
+// Route Kategori Gejala
+$route['kategori_gejala'] = 'KategoriGejalaController/index';
+$route['kategori_gejala/ajax'] = 'KategoriGejalaController/ajax';
+$route['kategori_gejala/create'] = 'KategoriGejalaController/create';
+$route['kategori_gejala/store'] = 'KategoriGejalaController/store';
+$route['kategori_gejala/edit/(:any)'] = 'KategoriGejalaController/edit/$1';
+$route['kategori_gejala/update/(:any)'] = 'KategoriGejalaController/update/$1';
+$route['kategori_gejala/destroy/(:any)'] = 'KategoriGejalaController/destroy/$1';
+
 // Route Gejala
 $route['gejala'] = 'GejalaController/index';
 $route['gejala/ajax'] = 'GejalaController/ajax';
@@ -97,6 +106,7 @@ $route['konsultasi'] = 'KonsultasiController/index';
 $route['konsultasi/penjelasan_gejala/(:any)'] = 'KonsultasiController/penjelasanGejala/$1';
 // $route['konsultasi/ajax'] = 'KonsultasiController/ajax';
 $route['konsultasi/create'] = 'KonsultasiController/create';
+$route['konsultasi/result'] = 'KonsultasiController/result';
 $route['konsultasi/nextQuestion'] = 'KonsultasiController/nextQuestion';
 $route['konsultasi/store'] = 'KonsultasiController/store';
 $route['konsultasi/edit/(:any)'] = 'KonsultasiController/edit/$1';

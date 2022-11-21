@@ -9,12 +9,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Master Gejala
-            <small>Master Gejala</small>
+            Master Kategori Gejala
+            <small>Master Kategori Gejala</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Master Gejala</li>
+            <li class="active">Master Kategori Gejala</li>
         </ol>
     </section>
 
@@ -25,22 +25,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <!-- Default box -->
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Gejala</h3>
+                        <h3 class="box-title">Kategori Gejala</h3>
                     </div>
                     <div class="box-body">
                         <div style="float: right;">
-                            <button action="<?php echo base_url(); ?>gejala/create" type="button" class="btn-add btn btn-flat btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
-                            <button action="<?php echo base_url(); ?>gejala/createImport" type="button" class="btn-import btn btn-flat btn-sm btn-primary"><i class="fa fa-upload"></i> Import</button>
+                            <button action="<?php echo base_url(); ?>kategori_gejala/create" type="button" class="btn-add btn btn-flat btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
                         </div>
                         <br />
                         <br />
-                        <table id="gejala" url="<?php echo base_url(); ?>gejala/ajax" class="table table-bordered table-hover">
+                        <table id="kategori_gejala" url="<?php echo base_url(); ?>kategori_gejala/ajax" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Gejala</th>
-                                    <th>Kategori Gejala</th>
-                                    <th>Nama Gejala</th>
+                                    <th>Nama Kategori Gejala</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -58,17 +55,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <?php
 
-$data['modal_id'] = 'modal_gejala';
+$data['modal_id'] = 'modal_kategori_gejala';
 $data['modal_size'] = 'md';
-$data['modal_title'] = 'Form Gejala';
+$data['modal_title'] = 'Form Kategori Gejala';
 $this->load->view('include/modal', $data);
 
 ?>
 
 <script>
-    let _table = $('#gejala');
-    let _url = $('#gejala').attr('url');
-    let _modal = $('#modal_gejala');
+    let _table = $('#kategori_gejala');
+    let _url = $('#kategori_gejala').attr('url');
+    let _modal = $('#modal_kategori_gejala');
 
     _table.DataTable({
         language: {
@@ -137,22 +134,7 @@ $this->load->view('include/modal', $data);
         getViewModal(_url, _modal);
     });
 
-    $(document).on('submit', 'form#gejala', function() {
-        event.preventDefault();
-        let _url = $(this).attr('action');
-        let _data = new FormData($(this)[0]);
-        send((data, xhr = null) => {
-            if (data.status == 422) {
-                FailedNotif(data.messages);
-            } else if (data.status == 200) {
-                SuccessNotif(data.messages);
-                _modal.modal('hide');
-                _table.DataTable().ajax.reload();
-            }
-        }, _url, 'json', 'post', _data);
-    });
-
-    $(document).on('submit', 'form#importGejala', function() {
+    $(document).on('submit', 'form#kategori_gejala', function() {
         event.preventDefault();
         let _url = $(this).attr('action');
         let _data = new FormData($(this)[0]);

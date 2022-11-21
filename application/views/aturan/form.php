@@ -41,14 +41,14 @@ if (!empty($aturan)) {
                 if (!empty($list_gejala)) {
                     if (in_array($value['id_ms_gejala'], $list_gejala)) {
             ?>
-                        <option value="<?php echo $value['id_ms_gejala']; ?>" selected><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
+                        <option value="<?php echo $value['id_ms_gejala']; ?>" selected><?php echo $value['kode_gejala']; ?> - <?php echo "[ " . $value['nama_ms_kategori'] . " ] " . $value['nama_gejala']; ?></option>
                     <?php   } else {
                     ?>
-                        <option value="<?php echo $value['id_ms_gejala']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
+                        <option value="<?php echo $value['id_ms_gejala']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo "[ " . $value['nama_ms_kategori'] . " ] " . $value['nama_gejala']; ?></option>
                     <?php    }
                 } else {
                     ?>
-                    <option value="<?php echo $value['id_ms_gejala']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo $value['nama_gejala']; ?></option>
+                    <option value="<?php echo $value['id_ms_gejala']; ?>"><?php echo $value['kode_gejala']; ?> - <?php echo "[ " . $value['nama_ms_kategori'] . " ] " . $value['nama_gejala']; ?></option>
                 <?php    }
                 ?>
             <?php   } ?>
