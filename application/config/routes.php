@@ -115,3 +115,7 @@ $route['konsultasi/destroy/(:any)'] = 'KonsultasiController/destroy/$1';
 $route['rep_konsultasi'] = 'KonsultasiController/indexReport';
 $route['rep_konsultasi/ajax'] = 'KonsultasiController/ajax';
 $route['rep_konsultasi/(:any)'] = 'KonsultasiController/getReport/$1';
+
+// cf
+$route['cf'] = 'CertainlyFactorController/index';
+$route['cf/generate_cf'] = 'CertainlyFactorController/generateCF';

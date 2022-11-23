@@ -5,9 +5,42 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class CertainlyFactorModel extends CI_Model
 {
 
+    public function generateCF()
+    {
+        $rule = $this->db->select('*')->from('rule')->get()->result_array();
+        $this->db->trans_begin();
+        try {
+            foreach ($rule as $key => $value) {
+                $id_penyakit = $value['id_ms_penyakit'];
+                $exp_gejala = explode(",", $value['gejala']);
+                foreach ($exp_gejala as $value_gejala) {
+                    $data = [
+                        'id_gejala' => $value_gejala,
+                        'id_penyakit' => $id_penyakit,
+                    ];
+                    $this->db->insert('certainly_factor', $data);
+                }
+            }
+            $this->db->trans_commit();
+            return [
+                'status' => true,
+                'messages' => 'Data Sukses Digenerate'
+            ];
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            return [
+                'status' => false,
+                'messages' => 'Error ' . $e->getMessage()
+            ];
+        }
+    }
+
     public function getAllCertainlyFactor()
     {
-        $sql = $this->db->select('*')->from('certainly_factor')->get();
+        $sql = $this->db->select('*')
+            ->join('ms_penyakit', 'ms_penyakit.id_ms_penyakit = certainly_factor.id_penyakit', 'left')
+            ->join('ms_gejala', 'ms_gejala.id_ms_gejala = certainly_factor.id_gejala', 'left')
+            ->from('certainly_factor')->get();
         $query = $sql->result_array();
         return $query;
     }
