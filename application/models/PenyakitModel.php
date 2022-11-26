@@ -34,11 +34,11 @@ class PenyakitModel extends CI_Model
             $sql = $this->db->select('id_ms_penyakit')->from('ms_penyakit')->order_by('id_ms_penyakit', 'desc')->limit(1)->get();
             $query = $sql->row_array();
 
-            if (empty($query['id'])) {
+            if (empty($query['id_ms_penyakit'])) {
                 $id = 1;
                 $kodePenyakit = 'P1';
             } else {
-                $id = $query['id'] + 1;
+                $id = $query['id_ms_penyakit'] + 1;
                 $kodePenyakit = 'P' . $id;
             }
 

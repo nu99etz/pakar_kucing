@@ -63,9 +63,9 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title"><?php if ($konsultasi['kemungkinan'] == 0) {
-                                                    echo "Kemungkinan ditemukan beberapa penyakit.";
+                                                    echo "Kemungkinan ditemukan beberapa penyakit dengan menggunakan metode Forward Chainning.";
                                                 } else {
-                                                    echo "Ditemukan penyakit.";
+                                                    echo "Ditemukan penyakit dengan menggunakan metode Forward Chainning.";
                                                 } ?></h3>
                     </div>
                     <div class="box-body">
@@ -83,6 +83,34 @@
                                     <td><?php echo $value[0]['solusi_penyakit']; ?></td>
                                 </tr>
                             <?php   } ?>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
+                <!-- Default box -->
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Menggunakan Certainly Factor</h3>
+                    </div>
+                    <div class="box-body">
+                        <table id="penyakit" class="table table-bordered table-hover">
+                            <tr>
+                                <th>Kode Penyakit</th>
+                                <th>Nama Penyakit</th>
+                                <th>Pengobatan Penyakit</th>
+                                <th>Presentase</th>
+                            </tr>
+                            <?php $i = 0; foreach ($cf['penyakit'] as $key => $value) {
+                            ?>
+                                <tr>
+                                    <td><?php echo $value[0]['kode_penyakit']; ?></td>
+                                    <td><?php echo $value[0]['nama_penyakit']; ?></td>
+                                    <td><?php echo $value[0]['solusi_penyakit']; ?></td>
+                                    <td><?php echo $cf['score'][$i]; ?></td>
+                                </tr>
+                            <?php $i++;  } ?>
                         </table>
                     </div>
                     <!-- /.box-body -->

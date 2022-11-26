@@ -92,13 +92,18 @@ class KonsultasiController extends MainController
         foreach ($answer as $key => $value) {
             // cek semua jawaban node jika jawaban ya maka gabung node menjadi satu
             if (isset($value)) {
-                if ($value == "0") {
-                    // Maintence::debug($key);
-                    $nodeJawabanYa[] = $key;
-                    $penyakit = $this->forwardChainning($key);
-                    if (!empty($penyakit)) {
-                        $penyakitNode[] = $penyakit;
-                    }
+                // if ($value == "0") {
+                //     // Maintence::debug($key);
+                //     $nodeJawabanYa[] = $key;
+                //     $penyakit = $this->forwardChainning($key);
+                //     if (!empty($penyakit)) {
+                //         $penyakitNode[] = $penyakit;
+                //     }
+                // }
+                $nodeJawabanYa[] = $key;
+                $penyakit = $this->forwardChainning($key);
+                if (!empty($penyakit)) {
+                    $penyakitNode[] = $penyakit;
                 }
             }
         }
@@ -157,6 +162,52 @@ class KonsultasiController extends MainController
             'kemungkinan' => $kemungkinan
         ];
 
+        return $data;
+    }
+
+    private function calculateCertainlyFactor($data, $answer)
+    {
+        foreach($data as $key => $value) {
+            $cf = 0;
+            $cfk = 0;
+            $total = 0;
+            foreach($answer as $key_answer => $value_answer) {
+                if($value['id_gejala'] == $key_answer) {
+                    $cf = ($value['mb_value'] - $value['md_value']) * $value_answer;
+                    if($cfk == 0) {
+                        $cfk = $cf + (0 * (1 - $cf));
+                    } else {
+                        $cfk = $cfk + ($cf * (1 - $cfk));
+                    }
+                }
+            }
+            $total = $cfk * 100;
+        }
+        return $total;
+    }
+
+    private function certainlyFactor($data)
+    {
+        $penyakit = $this->penyakit->getAllPenyakit();
+        $calculate = [];
+        foreach($penyakit as $key => $value) {
+            $cf = $this->db->from('certainly_factor')
+                ->where(['id_penyakit' => $value['id_ms_penyakit']])
+                ->get()
+                ->result_array();
+            $result = $this->calculateCertainlyFactor($cf, $data);
+            if($result > 0) {
+                $calculate[$value['id_ms_penyakit']] = $result;
+            }
+        }
+        if(count($calculate) > 0) {
+            arsort($calculate);
+            $data = [];
+            foreach($calculate as $key => $value) {
+                $data['penyakit'][] = $this->getPenyakit($key);
+                $data['score'][] = $value;
+            }
+        }
         return $data;
     }
 
@@ -231,13 +282,41 @@ class KonsultasiController extends MainController
     public function result()
     {
         $post = $this->input->post();
-        if (!empty($post['jawaban']) && count($post['jawaban']) >= 3) {
-            $forward_chainning = $this->getForwardChainning($post['jawaban']);
+        // $this->maintence->Debug($post);
+        // if (!empty($post['jawaban']) && count($post['jawaban']) >= 3) {
+        // $forward_chainning = $this->getForwardChainning($post['jawaban']);
+        // $data = [
+        //     // 'parent_gejala' => 0,
+        //     'konsultasi' => $forward_chainning,
+        //     'action' => base_url() . 'konsultasi/saveResult'
+        // ];
+        // $layout = 'konsultasi/konsultasi_view';
+        // $this->getLayout($layout, $data);
+        // } else {
+        // $validation = [
+        //     'validation' => "Silahkan memilih minimal 3 gejala"
+        // ];
+        // $this->session->set_userdata($validation);
+        // redirect('konsultasi/');
+        // }
+        // cek jumlah jawaban
+        $answer = [];
+        foreach ($post['nilai_cf'] as $key => $value) {
+            if ($value != null && $value != "") {
+                $answer[$key] = $value;
+            }
+        }
+
+        if (count($answer) > 3) {
+            $forward_chainning = $this->getForwardChainning($answer);
+            $cf = $this->certainlyFactor($answer);
             $data = [
                 // 'parent_gejala' => 0,
                 'konsultasi' => $forward_chainning,
+                'cf' => $cf,
                 'action' => base_url() . 'konsultasi/saveResult'
             ];
+            // $this->maintence->Debug($data);
             $layout = 'konsultasi/konsultasi_view';
             $this->getLayout($layout, $data);
         } else {
@@ -247,6 +326,8 @@ class KonsultasiController extends MainController
             $this->session->set_userdata($validation);
             redirect('konsultasi/');
         }
+
+        // $this->maintence->Debug($answer);
     }
 
     // public function nextQuestion()

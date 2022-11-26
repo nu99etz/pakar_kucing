@@ -9,12 +9,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Aturan
-            <small>Aturan</small>
+            Setting Rule / Aturan
+            <small>Setting Rule / Aturan</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Aturan</li>
+            <li class="active">Setting Rule / Aturan</li>
         </ol>
     </section>
 
@@ -25,7 +25,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <!-- Default box -->
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Aturan</h3>
+                        <h3 class="box-title">Setting Rule / Aturan</h3>
                     </div>
                     <div class="box-body">
                         <div style="float: right;">

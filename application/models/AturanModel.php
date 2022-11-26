@@ -70,8 +70,14 @@ class AturanModel extends CI_Model
                             'child_ms_gejala' => $post['gejala'][$i + 1]
                         ];
                     }
+
+                    $data_cf = [
+                        'id_penyakit' => $post['nama_penyakit'],
+                        'id_gejala' => $post['gejala'][$i]
+                    ];
                     $this->db->trans_begin();
                     $this->db->insert('rule_breadth', $data);
+                    $this->db->insert('certainly_factor', $data_cf);
                     $this->db->trans_commit();
                 }
             } catch (Exception $e) {

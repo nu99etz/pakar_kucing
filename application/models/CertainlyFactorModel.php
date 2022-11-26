@@ -35,13 +35,18 @@ class CertainlyFactorModel extends CI_Model
         }
     }
 
-    public function getAllCertainlyFactor()
+    public function getAllCertainlyFactor($id = null)
     {
         $sql = $this->db->select('*')
             ->join('ms_penyakit', 'ms_penyakit.id_ms_penyakit = certainly_factor.id_penyakit', 'left')
             ->join('ms_gejala', 'ms_gejala.id_ms_gejala = certainly_factor.id_gejala', 'left')
-            ->from('certainly_factor')->get();
-        $query = $sql->result_array();
+            ->join('ms_kategori_gejala', 'ms_kategori_gejala.id_ms_kategori_gejala = ms_gejala.id_ms_kategori_gejala', 'left')
+            ->from('certainly_factor');
+
+        if ($id != null) {
+            $sql = $sql->where(['id_ms_penyakit' => $id]);
+        }
+        $query = $sql->get()->result_array();
         return $query;
     }
 
@@ -59,42 +64,38 @@ class CertainlyFactorModel extends CI_Model
     {
         $post = $this->input->post();
 
-        $this->form_validation->set_rules('id_gejala', 'Nama Gejala', 'required');
-        $this->form_validation->set_rules('id_penyakit', 'Nama Penyakit', 'required');
-        $this->form_validation->set_rules('mb_value', 'Nilai MB', 'required');
-        $this->form_validation->set_rules('md_value', 'Nilai MD', 'required');
+        $this->db->trans_begin();
+        try {
 
-        if ($this->form_validation->run()) {
-
-            $data = [
-                'id_gejala' => $_POST['id_gejala'],
-                'id_penyakit' => $_POST['id_penyakit'],
-                'mb_value' => $_POST['mb_value'],
-                'md_value' => $_POST['md_value']
-            ];
-
-            $this->db->trans_begin();
-
-            try {
-                $this->db->insert('ms_kategori_gejala', $data);
-            } catch (Exception $e) {
-
-                $this->db->trans_rollback();
-                return [
-                    'status' => false,
-                    'messages' => 'Error ' . $e->getMessage()
-                ];
+            // set nilai mb
+            foreach ($post['nilai_mb'] as $key => $value) {
+                if ($value != null || $value != "") {
+                    $data = [
+                        'mb_value' => $value
+                    ];
+                    $this->db->where(['id_certainly_factor' => $key])->update('certainly_factor', $data);
+                }
             }
 
+            // set nilai md
+            foreach ($post['nilai_md'] as $key => $value) {
+                if ($value != null || $value != "") {
+                    $data = [
+                        'md_value' => $value
+                    ];
+                    $this->db->where(['id_certainly_factor' => $key])->update('certainly_factor', $data);
+                }
+            }
             $this->db->trans_commit();
             return [
                 'status' => true,
-                'messages' => 'Data Sukses Diinput'
+                'messages' => 'Data Sukses Diubah'
             ];
-        } else {
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
             return [
                 'status' => false,
-                'messages' => validation_errors()
+                'messages' => 'Error ' . $e->getMessage()
             ];
         }
     }

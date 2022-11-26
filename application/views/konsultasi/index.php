@@ -43,7 +43,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <th>No</th>
                             <th>Kategori Gejala</th>
                             <th>Nama Gejala</th>
-                            <th>Jawaban</th>
+                            <!-- <th>Jawaban</th> -->
+                            <th>Nilai Kepercayaan</th>
                         </thead>
                         <tbody>
                             <?php $no = 1;
@@ -60,12 +61,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <!-- <td></td> -->
                                         <?php   } ?>
                                         <td><?php echo "[ " . $value_gejala['kode_gejala'] . " ] - " . $value_gejala['nama_gejala']; ?></td>
-                                        <td>
+                                        <!-- <td>
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" name="jawaban[<?php echo $value_gejala['id_ms_gejala']; ?>]" id="jawaban" value="0">
                                                 </label>
                                             </div>
+                                        </td> -->
+                                        <td>
+                                            <input type='text' class='form-control rounded-0' name='nilai_cf[<?php echo $value_gejala['id_ms_gejala']; ?>]' id='nilai_cf' placeholder=''>
                                         </td>
                                     </tr>
                             <?php $no++;

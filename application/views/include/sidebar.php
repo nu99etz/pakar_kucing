@@ -46,11 +46,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </ul>
                 </li>
 
-                <li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-tree"></i> <span>Aturan / Rule</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="<?php echo base_url(); ?>aturan"><i class="fa fa-tree"></i>Setting Rule / Aturan</a></li>
+                        <li><a href="<?php echo base_url(); ?>cf"><i class="fa fa-tree"></i> Nilai Certainly Factor</a></li>
+                    </ul>
+                </li>
+
+                <!-- <li>
                     <a href="<?php echo base_url(); ?>aturan">
                         <i class="fa fa-tree"></i> <span>Aturan</span>
                     </a>
-                </li>
+                </li> -->
             <?php    } ?>
 
 

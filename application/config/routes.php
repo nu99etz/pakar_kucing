@@ -118,4 +118,6 @@ $route['rep_konsultasi/(:any)'] = 'KonsultasiController/getReport/$1';
 
 // cf
 $route['cf'] = 'CertainlyFactorController/index';
+$route['cf/get_cf/(:any)'] = 'CertainlyFactorController/getCF/$1';
+$route['cf/store'] = 'CertainlyFactorController/store';
 $route['cf/generate_cf'] = 'CertainlyFactorController/generateCF';
